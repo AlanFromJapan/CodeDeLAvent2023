@@ -16,16 +16,20 @@ if len(sys.argv) >= 3:
 
 
 def transform(l: str):
-    numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
     #print(f"Transforming {l}")
     s = ""
     done = False
     for c in l:
+        if c.isdigit():
+            #number, get out
+            break
+
         s = s + c
 
         for i in range(0, len(numbers)):
-            s2 = re.sub(numbers[i], str(i), s, count=1)
+            s2 = re.sub(numbers[i], str(i+1), s, count=1)
             if len (s2) != len(s):
                 l = s2 + l[len(s):]
                 done = True
@@ -37,10 +41,14 @@ def transform(l: str):
     s = ""
     done = False
     for c in l[::-1]:
+        if c.isdigit():
+            #number, get out
+            break
+
         s =  c + s #BEWARE ORDER!
         
         for i in range(0, len(numbers)):
-            s2 = re.sub(numbers[i], str(i), s)
+            s2 = re.sub(numbers[i], str(i+1), s)
             if len (s2) != len(s):
                 #l = re.sub(numbers[i], str(i), l)
                 l = l[:-len(s)] + s2
