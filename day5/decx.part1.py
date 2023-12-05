@@ -18,8 +18,7 @@ if len(sys.argv) >= 3:
 rex = re.compile(r"(\d+) (\d+) (\d+)")
 lcount = 0
 seeds = []
-directdit = []
-reversedict = []
+direct = []
 currentDict = -1
 with io.open(filename, "r") as f:
     while True:
@@ -49,8 +48,7 @@ with io.open(filename, "r") as f:
         if l.endswith("map:"):
             #new map!
             currentDict = currentDict + 1
-            directdit.append({})
-            reversedict.append({})
+            direct.append([])
             continue
 
         #should be real data to add to current dict
@@ -60,9 +58,7 @@ with io.open(filename, "r") as f:
             cnt = int(m.group(3))
             dest = int(m.group(1))
 
-            for i in range(cnt):
-                directdit[currentDict] [source + i] = dest + i
-                reversedict[currentDict] [dest + i] = source + i
+            direct[currentDict].append([source, cnt, dest])
 
             # print(f"New dict: source: {source}, cnt: {cnt}, dest: {dest}")
             # print(f"DIRECT  {directdit[currentDict]}")
@@ -74,9 +70,13 @@ with io.open(filename, "r") as f:
 seed2location = {}
 for i in seeds:
     v = i
-    for j in range(len(directdit)):
-        if v in directdit[j]:
-            v = directdit[j][v]
+    for j in range(len(direct)):
+        #in that map (j)
+        for k in range(len(direct[j])):
+            source, cnt, dest = direct[j][k]
+            if v in range(source, source+cnt):
+                v = v - source + dest
+                break
     seed2location[i] = v
 
 print(f"seed2location: {seed2location}")
